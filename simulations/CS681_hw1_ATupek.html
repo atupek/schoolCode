@@ -1,0 +1,211 @@
+<html><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>PixAnvil Graphics Demo</title>
+  
+  <script src="https://www.cs.uaf.edu/2015/spring/cs482/demo/pixanvil_2015_01/three.js"></script>
+  <script src="https://www.cs.uaf.edu/2015/spring/cs482/demo/pixanvil_2015_01/pixanvil.js"></script>
+  <link rel="stylesheet" href="https://www.cs.uaf.edu/2015/spring/cs482/demo/pixanvil_2015_01/pixanvil.css">
+</head>
+<body onload="PixAnvil.create(['Loop','Setup','UI',])">
+<H1>PixAnvil/Three.js demo</H1>
+<table class="pixanvil" id="draggable_outer">
+<tr>
+	<td id="draggable_left" style="width:40%">
+<p id="#errors" style="color:red;">Er, JavaScript or <a href="http://get.webgl.org/">WebGL</a> doesn't seem to be running, so basically all you're going to see is the bare code...</p>
+
+<table class="tabbed" style="width:100%;height:100%">
+<tr><td>
+	<p id="tabHeaders">
+</td></tr>
+<tr><td height="99%">
+<textarea class="tabBox" id="tab_Loop" rows="25" cols="30">
+//Ann Tupek CS681 HW1
+
+var radius = 2;
+
+mField = new vec3(.1, .1, .1);
+var q = 0.1;
+
+center = new vec3(2.0, 2.0, 2.0);
+
+
+for (var i=0;i<sim.nparticles;i++)
+{
+  var P=sim.particles.vertices[i];
+  var a = P.V.clone();
+  a.cross(mField);
+  a.t(q);
+ 
+  P.add(P.V.t(lib.dt));
+  P.add(a.t(.5 * Math.pow(lib.dt, 2)));
+                
+  P.V.add(a.t(lib.dt)); 
+
+  if(P.distanceTo(center)>radius)
+  {
+
+    var d = P.clone();
+    d.sub(center);
+
+    var n = d.normalize().negate();
+
+    if(P.V.angleTo(d)>Math.PI/2)
+    {
+       P.V.reflect(n);
+    }
+  }
+
+}
+
+// Update the vertex buffer object (VBO)
+sim.particles.verticesNeedUpdate = true;
+
+
+
+</textarea>
+
+
+<textarea class="tabBox" id="tab_Setup" rows="25" cols="30">
+// create the particle variables
+sim.particles = new THREE.Geometry();
+sim.nparticles = 20;
+var radius = 2;
+center = new vec3(2.0, 2.0, 2.0);
+
+// now create the individual particles
+for (var i = 0; i < sim.nparticles; i++) {
+   var P = new vec3; // P for particle or position
+   P.x=P.y=P.z=radius;
+   P.V=(new vec3).randSphere(5); //
+
+  while(P.length()>radius) //for uniform distribution inside sphere
+  {
+    P.rand(radius*2);
+  }
+  P.x=P.x+center.x;
+  P.y=P.y+center.y;
+  P.z=P.z+center.z;
+
+
+  // add it to the geometry
+  sim.particles.vertices.push(P); // particle
+
+  var color=0x00FF00; //make them green!
+  sim.particles.colors.push(new THREE.Color(color));
+
+}
+
+// create the particle system
+sim.particleSystem = new THREE.PointCloud(
+    sim.particles,
+    new THREE.PointCloudMaterial({
+      // color: 0xFFFFFF, // for fixed color
+      vertexColors: THREE.VertexColors,
+      size: 0.1, // size of dots, in meters
+      //blending: THREE.AdditiveBlending,
+      //transparent: true
+}));
+
+// Z-sort particles before drawing (for transparency)
+// sim.particleSystem.sortParticles = true;
+
+// add it to the scene
+scene.add(sim.particleSystem);
+
+
+
+
+
+</textarea>
+
+
+<textarea class="tabBox" id="tab_UI" rows="25" cols="30">
+// User Interface (UI) code:
+
+// Camera control:
+
+// Update camera coordinate system
+var s=camera;
+if (!s.X) { // startup: create initial coordinates
+    s.X=new vec3(1,0,0);
+    s.Y=new vec3(0,0,1);
+    s.Z=new vec3(0,-1,-0.0); // camera Z is world Y
+    s.P=new vec3(0,-4,1.0); // initial location
+}
+
+// Move camera via keyboard
+var move=new vec3(0,0,0); // sums current frame motion
+
+// X control via A and D
+if (lib.key['a']) move.pe(new vec3(-1,0,0));
+if (lib.key['d']) move.pe(new vec3(+1,0,0));
+// Y control via W and S
+if (lib.key['w']) move.pe(new vec3(0,0,-1));
+if (lib.key['s']) move.pe(new vec3(0,0,+1));
+// Z control via Q and Z
+if (lib.key['q']) move.pe(new vec3(0,+1,0));
+if (lib.key['z']) move.pe(new vec3(0,-1,0));
+
+move.te(2.0*lib.dt); // meters/second motion rate
+s.P.pe(s.X.t(move.x).p(s.Y.t(move.y)).p(s.Z.t(move.z)));
+
+// Rotate camera via mouse
+var speed=0.01; // radians per mouse pixel
+if (lib.mouseleft) { // move Z with mouse
+    s.Z.pe(s.X.t(-lib.mousedx*speed).p(
+           s.Y.t( lib.mousedy*speed)));
+}
+
+// Keep level: make sure X is horizontal.
+s.X.z=0.0;
+s.Y.crossVectors(s.Z,s.X.normalize());
+
+// Orthonormalize
+s.X.crossVectors(s.Y,s.Z).normalize();
+s.Y.crossVectors(s.Z,s.X).normalize();
+s.Z.normalize();
+
+  
+// Write coordinate system into matrix
+s.matrixAutoUpdate=false; // don't trash
+s.matrixWorldNeedsUpdate=true; // show
+  
+var m=s.matrix; // the camera's matrix
+
+// Utility function: set a matrix column
+function setCol(m,col,vec) {
+  m.elements[4*col+0]=vec.x;
+  m.elements[4*col+1]=vec.y;
+  m.elements[4*col+2]=vec.z;
+}
+
+  setCol(m,0,s.X);
+  setCol(m,1,s.Y);
+  setCol(m,2,s.Z);
+  setCol(m,3,s.P); // position from sim
+
+
+
+
+
+
+</textarea>
+
+
+<div class="tabDiv" id="tab_Save" ></div>
+<div class="tabDiv" id="tab_Stats" > </div>
+
+</td></tr>
+<tr><td>
+<p id="timeControl">
+</td></tr>
+</table>
+
+	</td>
+	<td id="draggable_thumb"> </td>
+	<td id="draggable_right">  <div id="renderer" style="width:99%;" /> </td>
+</tr>
+</table>
+
+</body>
+</html>

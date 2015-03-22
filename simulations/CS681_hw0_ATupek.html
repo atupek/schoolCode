@@ -1,0 +1,291 @@
+<html><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>PixAnvil Graphics Demo</title>
+  
+  <script src="https://www.cs.uaf.edu/2015/spring/cs482/demo/pixanvil_2013/three.js"></script>
+  <script src="https://www.cs.uaf.edu/2015/spring/cs482/demo/pixanvil_2013/pixanvil.js"></script>
+  <link rel="stylesheet" href="https://www.cs.uaf.edu/2015/spring/cs482/demo/pixanvil_2013/pixanvil.css">
+</head>
+<body onload="PixAnvil.create(['Loop','Setup','UI',])">
+<H1>PixAnvil/Three.js demo</H1>
+<table class="pixanvil" id="draggable_outer">
+<tr>
+	<td id="draggable_left" style="width:40%">
+<p id="#errors" style="color:red;">Er, JavaScript or <a href="http://get.webgl.org/">WebGL</a> doesn't seem to be running, so basically all you're going to see is the bare code...</p>
+
+<table class="tabbed" style="width:100%;height:100%">
+<tr><td>
+	<p id="tabHeaders">
+</td></tr>
+<tr><td height="99%">
+<textarea class="tabBox" id="tab_Loop" rows="25" cols="30">
+/* Simple Newtonian Physics Object "uav":
+	uav.V: velocity xyz vector (meters/sec)
+	uav.P: position xyz vector (meters)
+	(z axis points up)
+	lib.dt: animation timestep (seconds)
+*/
+
+//Ann Tupek, CS681 HW0
+
+var oldVel = uav.V.z;
+
+var grav = -9.8;
+
+uav.P.z += oldVel * lib.dt + .5 * grav * Math.pow(lib.dt, 2);
+uav.V.z += .5 * (grav + grav) * lib.dt;
+
+if(uav.P.z <= 0)
+    uav.V.z = Math.abs(oldVel + .5 * (grav + grav) * lib.dt);
+
+uav.draw(lib.dt); // show onscreen
+
+
+</textarea>
+
+
+<textarea class="tabBox" id="tab_Setup" rows="25" cols="30">
+// Simulation Parameters:
+
+// Make a "UAV" (looks more like a brick for now)
+function uavSim() 
+{
+	this.mesh=new THREE.Mesh(
+		new THREE.CubeGeometry(0.30, 0.10, 0.08),
+		new THREE.MeshLambertMaterial({color: 0x331133})
+	);
+	this.mesh.castShadow=true;
+	scene.add(this.mesh);
+
+	this.V=new vec3(0,0,-0.1); // moving down (m/s)
+	this.P=new vec3(0,0,2); // in the air (m)
+	this.last_z=this.P.z;
+	this.last_z=this.P.z;
+	this.time=0;
+
+	// Add an arrow to show velocity:
+	this.Varrow=new THREE.ArrowHelper(
+		new vec3(0,0,1).normalize(),
+		this.P,
+		1.0,
+		0xff0000
+	);
+	scene.add(this.Varrow);
+}
+
+sim.uav=new uavSim();
+window.uav=sim.uav; // add a global, for easier access
+
+uavSim.prototype.draw=function(dt) {
+  var E=this.P.z*9.8+0.5*this.V.z*this.V.z; // Energy=PE + KE
+
+  this.time+=dt;
+  trace("uav.P.z="+this.P.z);
+  trace("uav.V.z="+this.V.z);
+  trace("uav.time="+this.time);
+  trace("lib.dt="+lib.dt);
+  trace("total energy="+E);
+  
+  
+  // Update 3D geometry display
+  this.mesh.position=this.P.p(new vec3(0,0,0.04));
+  this.Varrow.setLength(this.V.z/(10.0));
+  sim.chartP.add(this.time, this.P.z);
+  sim.chartV.add(this.time, 1.0+0.1*this.V.z); /* the +1.0 is because V is signed */
+  sim.chartE.add(this.time, E*(1.0/10.0)); 
+}
+
+
+// Ground
+var groundTex=THREE.ImageUtils.loadTexture("https://www.cs.uaf.edu/2015/spring/cs482/demo/pixanvil_2013/checkerboard_noisy.jpg" );
+groundTex.wrapS=groundTex.wrapT=THREE.RepeatWrapping;
+groundTex.repeat=new vec2(25.0,25.0);
+
+sim.ground = new THREE.Mesh(
+  new THREE.CubeGeometry(50,50,0.0001),
+  new THREE.MeshLambertMaterial( {
+     color: 0xffccaa, opacity: 1 // , map:groundTex
+  })
+);
+sim.ground.position.z=0;  /* ground is at Z=0 */
+sim.ground.receiveShadow=true;
+scene.add(sim.ground);
+
+// Sun-like spotlight (shadows help you see depth)
+var l=new THREE.SpotLight();
+sim.light = l;
+l.position.set( -50, -100, 100 );
+l.castShadow=true;
+l.shadowCameraNear = 50; 
+l.shadowCameraFar = 500; 
+l.shadowCameraFov = 10; // degrees field of view
+scene.add(l);
+
+camera.lookAt(scene.position);
+
+
+
+/* Charting:
+  Blue is altitude P.z
+  Green is altitude rate V.z
+*/
+
+function chart(hasGrid,lineColor) {
+this.range=10.0;
+this.dx=0.01;
+this.last_vtx=-1;
+this.last_x=0.0;
+
+this.geom=new THREE.Geometry();
+/* for some reason THREE.js doesn't let you change 
+   vertex counts, so preallocate lots of vertices. */
+for (var x=0;x<=this.range;x+=this.dx) 
+{
+	this.geom.vertices.push(new vec3(x,0,0.5));
+}
+
+
+this.line=new THREE.Line(this.geom,
+  new THREE.LineBasicMaterial({
+        color: lineColor
+  })
+);
+scene.add(this.line);
+
+if (hasGrid) {
+	var minor=1.0;
+	this.grid = new THREE.Mesh( 
+	   new THREE.PlaneGeometry( 
+	     this.range, 2.0, 
+	     minor*this.range, minor*2.0 
+	   ), 
+	   new THREE.MeshBasicMaterial( { color: 0x7777ff, wireframe: true } ) );
+	this.grid.rotation.x=3.141592/2; // XY to XZ
+	this.grid.position.z=+1.0;
+	scene.add(this.grid);
+}
+
+
+}
+
+/* Add a new (x,y) location to this chart. */
+chart.prototype.add=function(new_x,new_y) {
+  if (new_x<this.range && new_x>=this.last_x+this.dx) {
+	var vtx={x:new_x,y:0.0,z:new_y};
+	for (i=1+this.last_vtx;i<this.geom.vertices.length;i++) {
+		this.geom.vertices[i]=vtx;
+	}
+	this.geom.vertices[this.last_vtx]=vtx;
+	this.last_vtx++;
+	this.last_x=vtx.x;
+	this.geom.verticesNeedUpdate=true;
+	if (this.grid) this.grid.position.x=-new_x+5.0;
+	this.line.position.x=-new_x;
+  }
+}
+
+sim.chartP=new chart(true, 0x0000ff); // altitude: blue
+sim.chartV=new chart(false,0xff0000); // rate: red
+sim.chartE=new chart(false,0x00ff00); // energy: green
+
+
+
+</textarea>
+
+
+<textarea class="tabBox" id="tab_UI" rows="25" cols="30">
+// User Interface (UI) code:
+
+// Manual UAV thrust control:
+
+var dl=2.0*lib.dt; // newtons of thrust per second of key
+if (lib.key['i']) uav.V.z+=dl; // more thrust
+if (lib.key['k']) uav.V.z-=dl; // less thrust
+
+if (lib.key['j']) uav.P.z=2.0; // jump up!
+
+
+// Camera control:
+
+// Update camera coordinate system
+var s=camera;
+if (!s.X) { // startup: create initial coordinates
+    s.X=new vec3(1,0,0);
+    s.Y=new vec3(0,0,1);
+    s.Z=new vec3(0,-1,-0.0); // camera Z is world Y
+    s.P=new vec3(0,-4,1.0); // initial location
+}
+
+// Move camera via keyboard
+var move=new vec3(0,0,0); // sums current frame motion
+
+// X control via A and D
+if (lib.key['a']) move.pe(new vec3(-1,0,0));
+if (lib.key['d']) move.pe(new vec3(+1,0,0));
+// Y control via W and S
+if (lib.key['w']) move.pe(new vec3(0,0,-1));
+if (lib.key['s']) move.pe(new vec3(0,0,+1));
+// Z control via Q and Z
+if (lib.key['q']) move.pe(new vec3(0,+1,0));
+if (lib.key['z']) move.pe(new vec3(0,-1,0));
+
+move.te(2.0*lib.dt); // meters/second motion rate
+s.P.pe(s.X.t(move.x).p(s.Y.t(move.y)).p(s.Z.t(move.z)));
+
+// Rotate camera via mouse
+var speed=0.01; // radians per mouse pixel
+if (lib.mouseleft) { // move Z with mouse
+    s.Z.pe(s.X.t(-lib.mousedx*speed).p(
+           s.Y.t( lib.mousedy*speed)));
+}
+
+// Keep level: make sure X is horizontal.
+s.X.z=0.0;
+s.Y.crossVectors(s.Z,s.X.normalize());
+
+// Orthonormalize
+s.X.crossVectors(s.Y,s.Z).normalize();
+s.Y.crossVectors(s.Z,s.X).normalize();
+s.Z.normalize();
+
+  
+// Write coordinate system into matrix
+s.matrixAutoUpdate=false; // don't trash
+s.matrixWorldNeedsUpdate=true; // show
+  
+var m=s.matrix; // the camera's matrix
+
+// Utility function: set a matrix column
+function setCol(m,col,vec) {
+  m.elements[4*col+0]=vec.x;
+  m.elements[4*col+1]=vec.y;
+  m.elements[4*col+2]=vec.z;
+}
+
+  setCol(m,0,s.X);
+  setCol(m,1,s.Y);
+  setCol(m,2,s.Z);
+  setCol(m,3,s.P); // position from sim
+
+
+
+</textarea>
+
+
+<div class="tabDiv" id="tab_Save" ></div>
+<div class="tabDiv" id="tab_Stats" > </div>
+
+</td></tr>
+<tr><td>
+<p id="timeControl">
+</td></tr>
+</table>
+
+	</td>
+	<td id="draggable_thumb"> </td>
+	<td id="draggable_right">  <div id="renderer" style="width:99%;" /> </td>
+</tr>
+</table>
+
+</body>
+</html>

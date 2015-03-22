@@ -1,0 +1,30 @@
+The Manifesto of the Assembly Extremist Society - Part 1
+A spectre is haunting the digital world, the spectre of assembly language. All the powers of the digital age have entered into a holy alliance to exorcise this spectre: Gates and Jobs, Zuckerberg and Williams, Programming Language Designers and Average Internet Users.
+
+Where is the party in opposition that has not been decried as assemblistic by its opponents in power? Where is the opposition that has not hurled back the branding reproach of assemblism, against the more advanced opposition parties, as well as against its reactionary adversaries?
+
+Two things result from this fact:
+
+I. Assembly Language is already acknowledged by all Digital powers to be itself a power.
+
+II. It is high time that Assemblists should openly, in the face of the whole world, publish their views, their aims, their tendencies, and meet this nursery tale of the Spectre of Assembly Language with a manifesto of the society itself.
+
+To this end, Assemblists of various nationalities have assembled in London and sketched the following manifesto, to be published in the English, French, German, Italian, Flemish and Danish languages.
+
+CHAPTER 1
+
+The history of all hitherto existing digital societies is the history of language struggles.
+
+C and C++, Java and JavaScript, Python and Perl versus Assembly Language and Machine Language.  In a word, oppressor and oppressed, stood in constant opposition to one another, carried on an uninterrupted, now hidden, now open fight, a fight that each time ended, either in a revolutionary reconstitution of digital society at large, or in the common ruin of the contending languages.
+
+In the earlier epochs of history, we find almost everywhere a complicated arrangement of languages into various orders, a manifold gradation of rank. In ancient Rome we have Latin and Greek; in the Middle Ages, Germanic and Romantic; in almost all of these languages, again, subordinate gradations.
+
+The modern higher-level language society that has sprouted from the history of Machine Language has not done away with language antagonisms. It has but established new languages, new conditions of oppression, new forms of struggle in place of the old ones.
+
+Our epoch, the epoch of the digital age, possesses, however, this distinct feature: it has simplified language antagonisms. Language as a whole is more and more splitting up into two great hostile camps, into two great classes directly facing each other: Code Monkeys and Assemblists.
+
+From the programmers of the Early Digital Age sprang the venerated Assembly Language.  From Assembly Language, the first elements of the Code Monkeys were developed.
+
+The advent of the Internet, the proliferation of mobile devices, opened up fresh ground for the rising Code Monkeys. The Internet, IBM, Microsoft, Apple, the increase in the means of information exchange, gave to programming an impulse never before known, and thereby, to the revolutionary element in the tottering balance of languages, a rapid development. 
+
+END OF TRANSMISSION
