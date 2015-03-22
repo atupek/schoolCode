@@ -1,0 +1,4 @@
+To improve my code I:
+Created global constants for the size of the layers.
+Put my sigmoid function where it belongs, at every node as opposed to only the last one.
+Fixed my timing so that it doesn’t include the initial creation of the vectors of Nodes.

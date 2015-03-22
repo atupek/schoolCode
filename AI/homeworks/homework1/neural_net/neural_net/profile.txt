@@ -1,0 +1,7 @@
+Profile:
+
+My neural net is super slow.  I’m only getting about 1,000 runs per second.
+
+I have a lot of unused functions and classes, since I decided to scrap my original plan, but because they are unused I do not think they are contributing to the glacial speed at which my neural net runs.
+
+I should not have changed my mind halfway through the project.  I tried to run the Xcode time profiler on it, but it came back with no data no matter what I did.  No excuse.  I’m disappointed in my code and myself.  Sorry.

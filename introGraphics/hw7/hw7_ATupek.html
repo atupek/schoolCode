@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+  hw7_ATupek.html
+  Ann Tupek
+  8 Dec 2014
+  
+  CS381 HW7
+  Conway's Game of Life
+  Implemented in Processing
+  Requires processing.min.js, hw7_ATupek.pde
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Conway's Game of Life</title>
+</head>
+<body>
+<h1>Conway's Game of Life</h1>
+<p>
+Have you Googled Conway's Game of Life recently?
+<p>
+There's a cool Easter Egg in the search results (look in upper right corner - you can make it full screen!).
+<p>
+Select Your Pattern!
+<p>
+<button onclick="pCall('can1','smallThings')">Small Things</button>
+<button onclick="pCall('can1','pulsar')">Pulsar</button>
+<button onclick="pCall('can1','gosper')">Gosper Glider Gun</button>
+<button onclick="pCall('can1','chaos')">Chaos</button>
+<p>
+<canvas width="500" height="400"
+  style="border: 1px solid gray"
+  id="can1"
+  data-processing-sources="hw7_ATupek.pde"
+></canvas>
+<script type="text/javascript">
+// pCall
+// Call Processing function from given canvas, with given function name,
+// passing no arguments.
+function pCall(canvasid, funcname)
+{
+    var processingInstance = Processing.getInstanceById(canvasid);
+    if (!processingInstance)
+    {
+        alert('No Processing instance found, canvas id: ' + canvasid);
+        return;
+    }
+    var func = processingInstance[funcname];
+    func();
+}
+</script>
+<script type="text/javascript" src="processing.min.js"></script>
+</body>
+</html>
+
