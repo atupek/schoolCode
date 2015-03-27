@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--
+  Proj1_ATupek.html
+  Ann Tupek
+  Project 1
+  Due 3/27/15
+  
+  Cellular Automata
+  Requires processing.min.js, Proj1_ATupek.pde
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Cellular Automata</title>
+</head>
+<body>
+<h1>Cellular Automata</h1>
+<p>
+A Selection of Rules from Stephen Wolfram's A New Kind of Science
+<p>
+Click inside the canvas to select the starting position and then select your rule.
+<p>
+<button onclick="pCall('can1','setRuleNumber',30)">Rule 30</button>
+<button onclick="pCall('can1','setRuleNumber',57)">Rule 57</button>
+<button onclick="pCall('can1','setRuleNumber',90)">Rule 90</button>
+<button onclick="pCall('can1','setRuleNumber',145)">Rule 145</button>
+<button onclick="pCall('can1','setRuleNumber',225)">Rule 225</button>
+<p>
+<canvas width="1000" height="500"
+  style="border: 3px solid gray"
+  id="can1"
+  data-processing-sources="Proj_ATupek1.pde"
+></canvas>
+<script type="text/javascript">
+// pCall
+// Call Processing function from given canvas, with given function name,
+// passing no arguments.
+function pCall(canvasid, funcname, arg)
+{
+    var processingInstance = Processing.getInstanceById(canvasid);
+    if (!processingInstance)
+    {
+        alert('No Processing instance found, canvas id: ' + canvasid);
+        return;
+    }
+    var func = processingInstance[funcname];
+    func(arg);
+}
+</script>
+<script type="text/javascript" src="processing.min.js"></script>
+</body>
+</html>
+
