@@ -1,0 +1,6 @@
+Ann Tupek
+CS681 Project 1 Final
+
+I implemented five of Wolfram's rules for 2D Cellular Automata using processing.js.  The user can set the initial starting point of the automata by clicking within the canvas and then selecting a rule button.
+
+The HTML interface requires Proj_ATupek1.pde and processing.min.js to run.

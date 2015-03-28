@@ -25,8 +25,6 @@ class Cell
     }
 }
 
-Cell[][] cellArray = new Cell[400][100];
-
 int lastUpdateTime = 0;
 
 int currentLine;
@@ -42,6 +40,8 @@ int B;
 
 int width = 400;
 int height = 100;
+
+Cell[][] cellArray = new Cell[width][height];
 
 boolean checkLeft(int i, int j)
 {
@@ -245,7 +245,6 @@ void reset()
         }
     }
     cellArray[startX][startY].filled = true;
-    //currentLine = 1;
     currentLine=startY;
     for(int i = 1; i< width; ++i)
     {
@@ -261,8 +260,6 @@ void mouseClicked()
 {
     startX = floor(mouseX/5)+100;
     startY = floor(mouseY/5);
-    //alert(mouseX);
-    //reset();
 }
 
 // setup
@@ -293,7 +290,7 @@ void setup()
 // draw
 void draw()
 {
-	background(255,255,255);
+    background(255,255,255);
 
   int m = millis();
 
