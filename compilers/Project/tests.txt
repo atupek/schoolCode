@@ -1,0 +1,25 @@
+wrote(nealStephenson, anathem).
+wrote(nealStephenson, cryptonomicon).
+wrote(shellSilverstein, whereTheSidewalkEnds).
+wrote(douglasAdams, hitchhikersGuideToTheGalaxy).
+wrote(hughHowey, wool).
+wrote(elizabethMoon, deedOfPaksenarrion).
+wrote(janeAusten, prideAndPrejudice).
+wrote(charlotteBronte, janeEyre).
+wrote(libbaBray, goingBovine).
+wrote(jimCHines, libriomancer).
+wrote(michaelEnde, neverEndingStory).
+wrote(susannaClarke, jonathanStrangeAndMrNorrell).
+wrote(lainiTaylor, daughterOfSmokeAndBone).
+wrote(lainiTaylor, dreamsOfGodsAndMonsters).
+wrote(maryShelley, frankenstein).
+wrote(juanitaDavis, wool).
+wrote(williamShakespeare, romeoAndJuliette).
+character(whereTheSidewalkEnds, sarahCynthiaSylviaStout).
+character(hitchhikersGuideToTheGalaxy, fordPrefect).
+character(hitchhikersGuideToTheGalaxy, marvin).
+character(romeoAndJuliette, juliette).
+character(wool, juliette).
+character(daughterOfSmokeAndBone, karou).
+character(dreamsOfGodsAndMonsters, karou).
+wroteAbout(X,Z):-wrote(X, Y), character(Y, Z).

@@ -1,0 +1,71 @@
+author(neal stephenson, shell silverstein, martin gardner, douglas adams, hugh howey, elizabeth moon, jane austen, charlotte bronte)
+book()
+character()
+vegetable(broccoli, cauliflower, carrot, spinach, )
+fruit()
+grain()
+meat()
+dairy()
+recipe()
+
+wrote(nealStephenson, anathem).
+wrote(nealStephenson, cryptonomicon).
+wrote(shellSilverstein, whereTheSidewalkEnds).
+wrote(douglasAdams, hitchhikersGuideToTheGalaxy).
+wrote(hughHowey, wool).
+wrote(elizabethMoon, deedOfPaksenarrion).
+wrote(janeAusten, prideAndPrejudice).
+wrote(charlotteBronte, janeEyre).
+wrote(libbaBray, goingBovine).
+wrote(jimCHines, libriomancer).
+wrote(michaelEnde, neverEndingStory).
+wrote(susannaClarke, jonathanStrangeAndMrNorrell).
+wrote(lainiTaylor, daughterOfSmokeAndBone).
+wrote(lainiTaylor, dreamsOfGodsAndMonsters).
+wrote(maryShelley, frankenstein).
+wrote(juanitaDavis, wool).
+wrote(williamShakespeare, romeoAndJuliette).
+
+dead(williamShakespeare).
+dead(janeAusten).
+dead(maryShelley).
+
+character(whereTheSidewalkEnds, sarahCynthiaSylviaStout).
+character(hitchhikersGuideToTheGalaxy, fordPrefect).
+character(hitchhikersGuideToTheGalaxy, marvin).
+character(romeoAndJuliette, juliette).
+character(wool, juliette).
+character(daughterOfSmokeAndBone, karou).
+character(dreamsOfGodsAndMonsters, karou).
+
+wroteAbout(X,Z):-wrote(X, Y), character(Y, Z).
+bookByDeadAuthor(X, Y):-wrote(X, Y), dead(X).
+
+myList([a, b, c]).
+myProg(X):- myList(L), member(X, L).
+
+childrensBooks([whereTheSidewalkEnds, neverEndingStory, frogAndToadAreFriends]).
+?-member(childrensBooks, wool). expected: no
+?-member(childrensBooks, neverEndingStory). expected: yes
+append(childrensBooks, matilda).
+?-member(childrensBooks, X). expected: whereTheSidewalkEnds, neverEndingStory, frogAndToadAreFriends, matilda
+
+stephensonsBooks([anathem, cryptonomicon]).
+
+?-wrote(X, frankenstein). expected: maryShelley
+?-wrote(nealStephenson, X). expected: anathem, cryptonomicon
+?-wrote(lainiTaylor, X). expected: daughterOfSmokeAndBone, dreamsOfGodsAndMonsters
+?-wrote(X, wool). expected: hughHowey, juanitaDavis
+?-character(X, sarahCynthiaSylviaStout). expected: whereTheSidewalkEnds
+?-character(X, karou). expected: daughterOfSmokeAndBone, dreamsOfGodsAndMonsters
+?-wroteAbout(X, juliette). expected: hughHowey, juanitaDavis, williamShakespeare
+?-wroteAbout(douglasAdams, X). expected: fordPrefect, marvin
+?-wroteAbout(X, sarahCynthiaSylviaStout). expected: shellSilverstein
+
+?- X is 6+2. expected X=8
+?- X is 6*2. expected X=12
+?- X is mod(7, 2). expected X=1
+?- X = 3+2. expected yes
+
+add3andDouble(X, Y):- Y is (X+3)*2.
+?-add3andDouble(1, X). expected X=8

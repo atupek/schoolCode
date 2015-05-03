@@ -1,0 +1,15 @@
+"+" {printf("plus");} // return ADD;}
+"-" {printf("minus");} // return SUB;}
+"*" {printf("times");} // return MUL;}
+"/" {printf("divide");} // return DIV;}
+"(" {printf("open");} // return OP;}
+")" {printf("close");} // return CP;}
+";" {printf("semi");} // return SC;}
+"." {printf("dot");} // return DOT;}
+"?-" {printf("query");} // return QRY;}
+":-" {printf("implies");} // return IMP;}
+"," {printf("comma");} // return COM;}
+[a-z]+([a-z]|[A-Z]|[0-9])*|"'"([a-z]|[A-Z]|[0-9])*"'" {yylval = yytext; printf("atom");} // return ATOM;}
+[A-Z_]+([a-z]|[A-Z_]|[0-9])* {yylval = yytext; printf("variable");} // return VARIABLE;}
+[0-9]+ {yylval = atoi(yytext); printf("number");} // return NUMBER;}
+[ \t] {/* ignore whitespace */}
