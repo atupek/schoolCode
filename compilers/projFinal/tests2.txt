@@ -1,0 +1,18 @@
+animal(dog).
+animal(cat).
+animal(mouse).
+animal(rat).
+animal(moose).
+animal(dinah).
+bird(eagle).
+bird(owl).
+bird(goose).
+bird(raven).
+likes(noOne, homework).
+likes(noOne, finals).
+likes(annie, chocolate).
+likes(annie, books).
+likes(annie, hiking).
+likes(annie, dinah).
+likes(dinah, moose).
+likesAnimal(X, Y):-likes(X, Y), animal(Y).
