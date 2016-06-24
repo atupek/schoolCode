@@ -6,6 +6,8 @@ and writes them to own file
 import urllib
 import pickle
 
+experiment_list = []
+
 with open('access.log.10') as data:
 
 	for each_line in data:
@@ -46,20 +48,20 @@ with open('access.log.10') as data:
 				#?what if students use 'name' in their code?
 				num_states=decoded_striped_code.count("name")
 				entry['num_states']=num_states
+				experiment_list.append(entry)
 				
-				"""write to file"""
-				"""with open('experiments2.txt', 'a') as out:
-					#print(each_line, file=out)#python3
-					#python2.X:
-					print >> out, entry"""
-				"""write to pickle individually"""
-				with open('experiment_pickle.txt', 'ab') as file_out:
-					pickle.dump(entry, file_out)
+"""write list of experiments to file"""
+with open('experiment_pickle.txt', 'wb') as file_out:
+					pickle.dump(experiment_list, file_out)
+print("number of experiments pickled:")
+print(len(experiment_list))
 
 with open('experiment_pickle.txt', 'rb') as in_file:
-	for each_entry in in_file:
-		new_entry=pickle.load(in_file)
-		print(new_entry)
+	unpickled_experiments=pickle.load(in_file)
+	for each_entry in unpickled_experiments:
+		print(each_entry)
+print("number of experiments unpickled:")
+print(len(unpickled_experiments))
 					
 
 
